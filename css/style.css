@@ -1,0 +1,693 @@
+@charset "utf-8";
+
+/* ------------ base ------------ */
+body {
+  font-family: sans-serif;
+  background-color: #fcfcfa;
+  line-height: 1.6;
+  color: #333;
+}
+/* SPでナビゲーションメニューが開いたらスクロールしないようにする */
+body.no-scroll {
+  overflow-y: hidden;
+}
+
+/* ------------ common ------------ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+.section {
+  padding: 80px 0;
+}
+@media screen and (min-width: 768px) {
+  .section {
+    padding: 120px 0;
+  }
+}
+/* セクションタイトル */
+.section-title {
+  font-size: 32px;
+  text-align: center;
+}
+.section-title-en {
+  display: block;
+  font-size: 20px;
+  color: #888;
+}
+
+/* ------------ loading ------------ */
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0);
+  color: #fff;
+  z-index: 40;
+  font-size: 24px;
+  transition: all 1s;
+}
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 100px auto;
+  background-color: #0bd;
+  border-radius: 50%;
+  animation: sk-scaleOut 1s infinite ease-in-out;
+}
+@media screen and (min-width: 768px) {
+  .spinner {
+    width: 100px;
+    height: 100px;
+    margin: 200px auto;
+  }
+}
+@keyframes sk-scaleOut {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+.loading.is-loaded {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ------------ header ------------ */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  padding: 0 16px;
+  background-color: rgba(255,255,255,0.9);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  z-index: 20;
+}
+@media screen and (min-width: 768px) {
+  .header {
+    height: 100px;
+  }
+}
+.header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* ロゴ */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+.logo__link > span,
+.footer__logo > span {
+  display: inline-block;
+  margin-right: 4px;
+  font-size: 28px;
+  color: #fc0;
+}
+
+/* グローバルナビゲーション */
+.global-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  /* transitionを付けてアニメーションするように */
+  transition: visibility 0.5s, opacity 0.5s;
+  /* 初期状態では非表示にする */
+  visibility: hidden;
+  opacity: 0;
+}
+@media screen and (min-width: 768px) {
+  .global-nav {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    /* 768px以上では表示させる */
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/* global-navにis-activeクラスが付いたら表示 */
+.global-nav.is-active {
+  visibility: visible;
+  opacity: 1;
+}
+.global-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+  text-align: center;
+}
+@media screen and (min-width: 768px) {
+  .global-nav__list {
+    flex-direction: row;
+  }
+}
+.global-nav__item {
+  /* 初期状態では少し下に下げておく */
+  transform: translateY(8px);
+  transition-property: transform;
+  transition-duration: 0.3s;
+}
+/* 0.03秒ずつ時間差を作る */
+.global-nav__item:nth-child(1) {
+  transition-delay: 0.05s
+}
+.global-nav__item:nth-child(2) {
+  transition-delay: 0.08s
+}
+.global-nav__item:nth-child(3) {
+  transition-delay: 0.11s;
+}
+.global-nav__item:nth-child(4) {
+  transition-delay: 0.14s;
+}
+.global-nav__item:nth-child(5) {
+  transition-delay: 0.17s;
+}
+/* global-navにis-activeクラスが付いたら元の位置に戻る(上に上がる) */
+.global-nav.is-active .global-nav__item {
+  transform: translateY(0);
+}
+.global-nav__link {
+  display: block;
+  font-size: 18px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255,255,255,0.95);
+  z-index: 10;
+  /* transitionを付けてアニメーションするようにする */
+  transition: visibility 0.3s, opacity 0.3s;
+  /* 初期状態では非表示 */
+  visibility: hidden;
+  opacity: 0;
+}
+/* overlayにis-activeクラスが付いたら表示 */
+.overlay.is-active {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ハンバーガーメニュー */
+.hamburger {
+  width: 25px;
+  height: 20px;
+  cursor: pointer;
+  position: relative;
+  z-index: 30;
+}
+@media screen and (min-width: 768px) {
+  /* 768px以上では非表示 */
+  .hamburger {
+    display: none;
+  }
+}
+.hamburger__line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #0bd;
+  position: absolute;
+  left: 50%;
+  /* transitionでアニメーションが付くようにする */
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger__line:nth-child(1) {
+  top: 0;
+  transform: translate(-50%, 0);
+}
+.hamburger__line:nth-child(2) {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.hamburger__line:nth-child(3) {
+  top: 100%;
+  transform: translate(-50%, -100%);
+}
+/* ボタンをクリックして.hamburgerにis-activeクラスがついたら */
+.hamburger.is-active .hamburger__line:nth-child(1) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.hamburger.is-active .hamburger__line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.is-active .hamburger__line:nth-child(3) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* ------------ kv ------------ */
+.kv {
+  height: 100vh;
+}
+.kv__box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 90%;
+  padding: 32px 15px;
+  background-color: rgba(255,255,255,0.6);
+  z-index: 1;
+}
+@media screen and (min-width: 768px) {
+  .kv__box {
+    width: 70%;
+    padding: 64px 40px;
+  }
+}
+.kv__main-copy {
+  font-size: 32px;
+  min-height: 52px;
+}
+@media screen and (min-width: 768px) {
+  .kv__main-copy {
+    font-size: 60px;
+    min-height: 96px;
+  }
+}
+.kv__sub-copy {
+  margin-top: 4px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+@media screen and (min-width: 768px) {
+  .kv__sub-copy {
+    font-size: 30px;
+  }
+}
+/* Swiper */
+/* ファーストビューの全画面で表示させる */
+.swiper-container {
+  height: 100%;
+  position: relative;
+}
+.swiper-slide {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+.swiper-slide-active .slide-img,
+.swiper-slide-duplicate-active .slide-img,
+.swiper-slide-prev .slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* アニメーションの設定 */
+  animation: zoomUp 10s linear 0s 1 normal both;
+}
+/* 画像をズームさせるアニメーション */
+@keyframes zoomUp {
+  0% {
+    transform: scale(1); /* 最初は等倍 */
+  }
+  100% {
+    transform: scale(1.15); /* 最後は1.15倍 */
+  }
+}
+
+/* ------------ section ------------ */
+.section p + p {
+  margin-top: 24px;
+}
+
+/* ------------ About ------------ */
+.about__inner {
+  max-width: 800px;
+}
+.about__contents {
+  margin-top: 40px;
+}
+
+/* ------------ Works ------------ */
+.works__content {
+  margin-top: 40px;
+}
+/* タブ */
+.works__tab {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+@media screen and (min-width: 400px) {
+  .works__tab {
+    gap: 8px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .works__tab {
+    gap: 16px;
+  }
+}
+.tab__item {
+  width: 90px;
+  padding: 14px 0;
+  text-align: center;
+  border: 4px solid #aaa;
+  border-bottom: none;
+  background-color: #fff;
+  border-radius: 4px 4px 0 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+@media screen and (min-width: 400px) {
+  .tab__item {
+    width: 140px;
+    font-size: 16px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .tab__item {
+    width: 200px;
+    font-size: 20px;
+  }
+}
+.tab__item:hover {
+  background-color: #eee;
+}
+.tab__item.is-active {
+  background-color: #eee;
+}
+/* パネル */
+.works__panel {
+  padding: 36px 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 4px solid #aaa;
+}
+.panel__container {
+  display: none;
+  animation: fade-in 0.8s ease-in-out;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.panel__container.is-active {
+  display: block;
+}
+.panel__title {
+  font-size: 20px;
+  text-align: center;
+}
+.panel__list {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 16px;
+}
+@media screen and (min-width: 768px) {
+  .panel__list {
+    grid-template-columns: repeat(2, 1fr)
+  }
+}
+@media screen and (min-width: 1025px) {
+  .panel__list {
+    grid-template-columns: repeat(3, 1fr)
+  }
+}
+
+/* ------------ Q & A ------------ */
+.qa__inner {
+  max-width: 1000px;
+}
+.qa__content {
+  margin-top: 40px;
+}
+.qa__item {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.15);
+}
+.qa__item:not(:first-child) {
+  margin-top: 28px;
+}
+.qa__list {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+.qa__head {
+  position: relative;
+  text-align: left;
+  padding: 20px 30px 20px 20px;
+  background: #eee;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.qa__q,
+.qa__a {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.qa__q {
+  color: #ed4c12;
+}
+.qa__a {
+  color: #0bd;
+}
+.qa__head::before,
+.qa__head::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background-color: #333;
+  transition: transform 0.5s;
+}
+.qa__head::after {
+  transform: rotate(90deg);
+}
+/* クリックしたら縦棒から横棒に */
+.qa__head.is-open::after {
+  transform: rotate(0);
+}
+
+.qa__body {
+  position: relative;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  transition: all 0.5s;
+
+  border: transparent;
+  padding: 0 20px;
+  line-height: 0;
+  opacity: 0;
+}
+/* クリックしたら */
+.qa__body.is-open {
+  padding: 20px;
+  line-height: 1.5;
+  opacity: 1;
+  border: 1px solid #eee;
+}
+
+/* ------------ contact ------------ */
+.contact {
+  background: rgb(255,204,2);
+  background: linear-gradient(90deg, rgba(255,204,2,1) 0%, rgba(0,212,255,1) 100%);
+}
+.contact__inner {
+  max-width: 800px;
+}
+.contact__form {
+  margin-top: 40px;
+}
+/* フォーム */
+.form {
+  border: 4px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 42px 15px;
+}
+@media screen and (min-width: 768px) {
+  .form {
+    padding: 38px 36px;
+  }
+}
+.form__unit:not(:first-child) {
+  margin-top: 32px;
+}
+/* フォーム部品 */
+.form__control-text,
+.form__control-email,
+.form__control-textarea {
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.form__control-text,
+.form__control-email {
+  width: 100%;
+}
+@media screen and (min-width: 768px) {
+  .form__control-text,
+  .form__control-email {
+    width: 50%;
+  }
+}
+.form__control-textarea {
+  width: 100%;
+  resize: none;
+  height: 200px;
+}
+.form__control-text:focus,
+.form__control-email:focus,
+.form__control-textarea:focus,
+.form-btn:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0,212,255,0.7)
+}
+/* 送信ボタン */
+.form__btn-wrapper {
+  margin-top: 48px;
+  text-align: center;
+}
+.form-btn {
+  display: inline-block;
+  border: transparent;
+  padding: 24px 0;
+  width: 280px;
+  max-width: 100%;
+  border: 2px solid currentColor;
+  border-radius: 100vh;
+  font-size: 16px;
+  color: #fff;
+  font-weight: bold;
+  /* disabled属性が付いていない状態 */
+  cursor: pointer; /* カーソルは矢印 */
+  background-color: #333; /* 背景色は黒 */
+}
+/* formのボタンにdisabled属性が付いていたら */
+.form-btn:disabled {
+  /* カーソル矢印を解除 */
+  cursor: auto;
+  /* 背景色は灰色 */
+  background-color: #ccc;
+}
+/* エラーメッセージ */
+/* .error {
+  margin-top: 4px;
+  color: #f33;
+  font-size: 14px;
+  font-weight: bold;
+
+  display: none;
+}
+.error.is-error {
+  display: block;
+} */
+
+/* ------------ footer ------------ */
+.footer {
+  padding: 60px 15px 20px;
+  background-color: #f0f0f0;
+}
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+/* フッターナビゲーション */
+.footer-nav__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.footer-nav__link {
+  display: block;
+  font-size: 14px;
+}
+.copyright {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 12px;
+}
+/* Topへ戻るボタン */
+.to-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #0bd;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s, transform 0.3s;
+}
+@media screen and (min-width: 768px) {
+  .to-top {
+    font-size: 16px;
+    width: 90px;
+    height: 90px;
+    right: 20px;
+    bottom: 20px;
+  }
+
+}
+.to-top:hover {
+  transform: scale(1.05);
+}
+.to-top.is-active {
+  opacity: 1;
+  visibility: visible;
+}
